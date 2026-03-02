@@ -19,23 +19,33 @@ class SettingController extends Controller
     {
         $request->validate([
             'app_name' => 'required|string|max:255',
-            'app_logo' => 'nullable|image|max:2048', // 2MB Max
-            'app_favicon' => 'nullable|image|max:1024', // 1MB Max
+            'app_logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
+            'app_favicon' => 'nullable|image|mimes:png,jpg,jpeg,ico|max:1024',
         ]);
 
-        // Update Text Settings
         Setting::where('key', 'app_name')->update(['value' => $request->app_name]);
 
-        // Handle Logo Upload
         if ($request->hasFile('app_logo')) {
-            $path = $request->file('app_logo')->store('public/settings');
-            Setting::where('key', 'app_logo')->update(['value' => Storage::url($path)]);
+            // Hapus file lama agar tidak jadi sampah
+            $oldLogo = Setting::where('key', 'app_logo')->first()->value ?? null;
+            if ($oldLogo && Storage::disk('public')->exists($oldLogo)) {
+                Storage::disk('public')->delete($oldLogo);
+            }
+
+            $filename = 'logo_' . time() . '.' . $request->file('app_logo')->getClientOriginalExtension();
+            $path = $request->file('app_logo')->storeAs('settings', $filename, 'public');
+            Setting::where('key', 'app_logo')->update(['value' => $path]);
         }
 
-        // Handle Favicon Upload
         if ($request->hasFile('app_favicon')) {
-            $path = $request->file('app_favicon')->store('public/settings');
-            Setting::where('key', 'app_favicon')->update(['value' => Storage::url($path)]);
+            $oldFavicon = Setting::where('key', 'app_favicon')->first()->value ?? null;
+            if ($oldFavicon && Storage::disk('public')->exists($oldFavicon)) {
+                Storage::disk('public')->delete($oldFavicon);
+            }
+
+            $filename = 'favicon_' . time() . '.' . $request->file('app_favicon')->getClientOriginalExtension();
+            $path = $request->file('app_favicon')->storeAs('settings', $filename, 'public');
+            Setting::where('key', 'app_favicon')->update(['value' => $path]);
         }
 
         return redirect()->back()->with('success', 'Pengaturan berhasil diperbarui.');

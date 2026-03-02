@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-<div class="row mt-4"> 
+<div class="row mt-4">
     <div class="col-12">
         <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
@@ -25,7 +25,7 @@
                     </li>
                 </ul>
             </div>
-            
+
             <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
@@ -39,15 +39,15 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-desktop"></i></span>
                                             </div>
-                                            <input type="text" class="form-control @error('app_name') is-invalid @enderror" 
-                                                   id="app_name" name="app_name" 
-                                                   value="{{ old('app_name', $settings['app_name'] ?? 'CPB System') }}" required>
+                                            <input type="text" class="form-control @error('app_name') is-invalid @enderror"
+                                                id="app_name" name="app_name"
+                                                value="{{ old('app_name', $settings['app_name'] ?? 'CPB System') }}" required>
                                             @error('app_name')
-                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label for="app_description">Deskripsi Aplikasi</label>
                                         <textarea class="form-control" name="app_description" id="app_description" rows="3" placeholder="Masukkan deskripsi singkat aplikasi...">{{ old('app_description', $settings['app_description'] ?? '') }}</textarea>
@@ -69,22 +69,24 @@
                                         <label for="app_logo">Logo Utama</label>
                                         <div class="input-group">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input @error('app_logo') is-invalid @enderror" 
-                                                       id="app_logo" name="app_logo" accept="image/*">
+                                                <input type="file" class="custom-file-input @error('app_logo') is-invalid @enderror"
+                                                    id="app_logo" name="app_logo" accept="image/*">
                                                 <label class="custom-file-label" for="app_logo">Pilih file logo</label>
                                             </div>
                                         </div>
                                         <small class="text-muted">Format yang disarankan: PNG transparan.</small>
                                         @error('app_logo')
-                                            <span class="text-danger d-block small mt-1">{{ $message }}</span>
+                                        <span class="text-danger d-block small mt-1">{{ $message }}</span>
                                         @enderror
-                                        
-                                        <div class="mt-4 text-center p-3 border rounded bg-light" style="min-height: 120px; display: flex; flex-direction: column; justify-content: center;">
-                                            <p class="text-sm text-muted mb-2">Preview Logo Saat Ini:</p>
+
+                                        <div class="mt-4 text-center p-3 border rounded bg-light">
+                                            <p class="text-sm text-muted mb-2">Preview Logo saat ini:</p>
                                             @if(isset($settings['app_logo']) && $settings['app_logo'])
-                                                <img src="{{ asset($settings['app_logo']) }}" alt="App Logo" class="img-fluid mx-auto" style="max-height: 80px">
+                                            <img src="{{ Storage::url($settings['app_logo']) }}?v={{ time() }}"
+                                                alt="App Logo"
+                                                style="height: 80px; width: 140px; object-fit: cover; border-radius: 50% / 50%; border: 2px solid #ddd; display: block; margin: 0 auto;">
                                             @else
-                                                <span class="text-muted italic small">Belum ada logo diunggah</span>
+                                            <span class="text-muted small">Belum ada logo</span>
                                             @endif
                                         </div>
                                     </div>
@@ -95,22 +97,24 @@
                                         <label for="app_favicon">Favicon Browser</label>
                                         <div class="input-group">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input @error('app_favicon') is-invalid @enderror" 
-                                                       id="app_favicon" name="app_favicon" accept="image/*">
+                                                <input type="file" class="custom-file-input @error('app_favicon') is-invalid @enderror"
+                                                    id="app_favicon" name="app_favicon" accept="image/*">
                                                 <label class="custom-file-label" for="app_favicon">Pilih file favicon</label>
                                             </div>
                                         </div>
                                         <small class="text-muted d-block">Ukuran ideal: 32x32 pixel (ICO/PNG).</small>
                                         @error('app_favicon')
-                                            <span class="text-danger d-block small mt-1">{{ $message }}</span>
+                                        <span class="text-danger d-block small mt-1">{{ $message }}</span>
                                         @enderror
 
-                                        <div class="mt-4 text-center p-3 border rounded bg-light" style="min-height: 120px; display: flex; flex-direction: column; justify-content: center;">
+                                        <div class="mt-4 text-center p-3 border rounded bg-light" style="min-height: 100px;">
                                             <p class="text-sm text-muted mb-2">Preview Favicon Saat Ini:</p>
                                             @if(isset($settings['app_favicon']) && $settings['app_favicon'])
-                                                <img src="{{ asset($settings['app_favicon']) }}" alt="App Favicon" class="img-thumbnail mx-auto" style="max-height: 32px">
+                                            <img src="{{ Storage::url($settings['app_favicon']) }}"
+                                                alt="App Favicon"
+                                                style="width: 32px; height: 32px; object-fit: contain; border-radius: 4px;">
                                             @else
-                                                <span class="text-muted italic small">Belum ada favicon diunggah</span>
+                                            <span class="text-muted italic small">Belum ada favicon diunggah</span>
                                             @endif
                                         </div>
                                     </div>
@@ -119,7 +123,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card-footer bg-white border-top">
                     <div class="row">
                         <div class="col-12 text-right">
@@ -140,7 +144,7 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Update label input file secara dinamis
         $(".custom-file-input").on("change", function() {
             var fileName = $(this).val().split("\\").pop();
