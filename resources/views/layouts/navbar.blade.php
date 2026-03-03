@@ -5,12 +5,11 @@
             @if(isset($app_settings['app_logo']) && $app_settings['app_logo'])
             <img src="{{ Storage::url($app_settings['app_logo']) }}?v={{ time() }}"
                 alt="App Logo"
-                class="elevation-2 mr-2"
-                style="height: 35px; width: 60px; object-fit: cover; border-radius: 50% / 50%; border: 1px solid rgba(255,255,255,0.2);">
+                class="app-full-logo"
+                style="height: 38px; width: auto; max-width: 220px; object-fit: contain;">
             @else
-            <img src="{{ asset('vendor/adminlte/dist/img/AdminLTELogo.png') }}" alt="CPB Logo" class="brand-image img-circle elevation-2 mr-2" style="max-height: 33px;">
+            <img src="{{ asset('vendor/adminlte/dist/img/AdminLTELogo.png') }}" alt="CPB Logo" class="app-full-logo" style="height: 38px; width: auto; max-width: 220px; object-fit: contain;">
             @endif
-            <span class="brand-text font-weight-bold">{{ $app_settings['app_name'] ?? 'CPB System' }}</span>
         </a>
 
         <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -244,6 +243,10 @@
         letter-spacing: -0.5px;
     }
 
+    .app-full-logo {
+        display: block;
+    }
+
     .shadow-xs {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
@@ -331,6 +334,11 @@
             margin-right: 0;
         }
 
+        .app-full-logo {
+            max-width: 170px !important;
+            height: 34px !important;
+        }
+
         /* Menyesuaikan menu dropdown agar tidak terlalu lebar di mobile */
         .dropdown-menu-lg {
             min-width: 280px !important;
@@ -367,9 +375,9 @@
             height: 28px;
         }
 
-        .brand-text {
-            display: none;
-            /* Sembunyikan nama aplikasi di layar sangat kecil agar tidak sumpek */
+        .app-full-logo {
+            max-width: 140px !important;
+            height: 30px !important;
         }
     }
 </style>
