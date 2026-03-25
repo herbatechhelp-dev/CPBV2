@@ -21,6 +21,8 @@
             <tr>
                 <th>No</th>
                 <th>No. Batch</th>
+                <th>No. Dokumen</th>
+                <th>Rev</th>
                 <th>Jenis</th>
                 <th>Produk</th>
                 <th>Status</th>
@@ -33,10 +35,12 @@
             <tr>
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $cpb->batch_number }}</td>
+                <td>{{ $cpb->cpb_number ?? '-' }}</td>
+                <td>{{ $cpb->cpb_revision ?? '0' }}</td>
                 <td>{{ ucfirst($cpb->type) }}</td>
                 <td>{{ $cpb->product_name }}</td>
                 <td>{{ strtoupper($cpb->status) }}</td>
-                <td>{{ $cpb->created_at->format('d/m/Y') }}</td>
+                <td>{{ $cpb->created_at->timezone('Asia/Jakarta')->format('d/m/Y H:i') }}</td>
             </tr>
             @empty
             <tr>

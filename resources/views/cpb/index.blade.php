@@ -99,6 +99,7 @@
                         <thead class="bg-light text-muted small text-uppercase">
                             <tr>
                                 <th class="pl-4">No. Batch</th>
+                                <th>No. Dokumen</th>
                                 <th>Jenis</th>
                                 <th>Produk</th>
                                 <th>Status Tahap</th>
@@ -112,6 +113,10 @@
                                 <tr>
                                     <td class="pl-4 align-middle">
                                         <span class="font-weight-bold text-primary">{{ $cpb->batch_number }}</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="font-weight-bold text-dark text-sm">{{ $cpb->cpb_number ?? '-' }}</div>
+                                        <div class="text-xs text-muted">Rev: {{ $cpb->cpb_revision ?? '0' }}</div>
                                     </td>
                                     <td class="align-middle">
                                         <span class="badge {{ $cpb->type == 'pengolahan' ? 'bg-info' : 'bg-primary' }} px-2 py-1">

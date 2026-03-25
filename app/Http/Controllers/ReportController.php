@@ -53,7 +53,10 @@ class ReportController extends Controller
             $query->where('status', $request->status);
         }
         if ($request->filled('batch_number')) {
-            $query->where('batch_number', 'like', '%' . $request->batch_number . '%');
+            $query->where(function($q) use ($request) {
+                $q->where('batch_number', 'like', '%' . $request->batch_number . '%')
+                  ->orWhere('cpb_number', 'like', '%' . $request->batch_number . '%');
+            });
         }
         
         $cpbs = $query->orderBy('created_at', 'desc')
@@ -62,7 +65,7 @@ class ReportController extends Controller
         
         // Statistik disesuaikan dengan hasil query filter (Visibility-Aware)
         $total = (clone $query)->count();
-        $overdue = (clone $query)->where('is_overdue', true)->count();
+        $overdue = (clone $query)->where('is_overdue', true)->where('status', '!=', 'released')->count();
         $released = (clone $query)->where('status', 'released')->count();
         
         return view('reports.index', compact('cpbs', 'total', 'overdue', 'released'));

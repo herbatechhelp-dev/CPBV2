@@ -139,6 +139,7 @@
                         <thead class="bg-light text-muted small text-uppercase">
                             <tr>
                                 <th class="pl-4">No. Batch</th>
+                                <th>No. Dokumen</th>
                                 <th>Jenis</th>
                                 <th>Produk</th>
                                 <th>Tahapan / Lokasi</th>
@@ -151,6 +152,10 @@
                             @forelse($cpbs as $cpb)
                                 <tr>
                                     <td class="pl-4 font-weight-bold text-primary">{{ $cpb->batch_number }}</td>
+                                    <td>
+                                        <span class="d-block">{{ $cpb->cpb_number ?? '-' }}</span>
+                                        <small class="text-muted">Rev: {{ $cpb->cpb_revision ?? '0' }}</small>
+                                    </td>
                                     <td>
                                         <span class="badge {{ $cpb->type == 'pengolahan' ? 'badge-info' : 'badge-primary' }} text-uppercase">
                                             {{ $cpb->type }}

@@ -13,9 +13,9 @@ $(document).ready(function() {
         arrowSign: '<i class="fas fa-chevron-right"></i>'
     });
     
-    // Auto-dismiss alerts after 5 seconds
+    // Auto-dismiss success alerts after 5 seconds, leave error/warning alerts manual
     setTimeout(function() {
-        $('.alert').alert('close');
+        $('.alert-success').alert('close');
     }, 5000);
     
     // Check for unread notifications every minute
