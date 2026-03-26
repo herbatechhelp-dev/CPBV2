@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <!-- Main Content -->
+            <!--Main Content-->
             <section class="content">
                 <div class="container-fluid">
                     @if(session('success'))
