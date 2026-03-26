@@ -51,7 +51,10 @@ class CPBController extends Controller
         }
 
         if ($request->has('batch_number')) {
-            $query->where('batch_number', 'like', '%' . $request->batch_number . '%');
+            $query->where(function($q) use ($request) {
+                $q->where('batch_number', 'like', '%' . $request->batch_number . '%')
+                  ->orWhere('cpb_number', 'like', '%' . $request->batch_number . '%');
+            });
         }
 
         // Di dalam public function index(Request $request)
@@ -195,6 +198,8 @@ class CPBController extends Controller
                 'current_department_id' => $receiver->id,
                 'entered_current_status_at' => now(),
                 'is_rework' => false,
+                'is_overdue' => false,
+                'overdue_since' => null,
             ]);
 
             HandoverLog::create([
@@ -225,6 +230,8 @@ class CPBController extends Controller
 
         $validated = $request->validate([
             'batch_number' => 'required|unique:cpbs,batch_number|max:50',
+            'cpb_number' => 'required|string|max:100',
+            'cpb_revision' => 'required|string|max:10',
             'type' => 'required|in:pengolahan,pengemasan',
             'product_name' => 'required|max:100',
             'file' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:20480',
@@ -247,6 +254,8 @@ class CPBController extends Controller
         try {
             $cpb = CPB::create([
                 'batch_number' => $validated['batch_number'],
+                'cpb_number' => $validated['cpb_number'],
+                'cpb_revision' => $validated['cpb_revision'],
                 'type' => $validated['type'],
                 'product_name' => $validated['product_name'],
                 'created_by' => $creator->id,
@@ -384,7 +393,11 @@ class CPBController extends Controller
         }
 
         $validated = $request->validate([
+            'batch_number' => 'required|max:50|unique:cpbs,batch_number,' . $cpb->id,
+            'type' => 'required|in:pengolahan,pengemasan',
             'product_name' => 'required|max:100',
+            'cpb_number' => 'required|string|max:100',
+            'cpb_revision' => 'required|string|max:10',
         ]);
 
         $cpb->update($validated);
@@ -408,6 +421,8 @@ class CPBController extends Controller
                 'status' => 'released',
                 'entered_current_status_at' => now(),
                 'is_overdue' => false,
+                'overdue_since' => null,
+                'is_rework' => false,
             ]);
 
             // Create handover log for release
