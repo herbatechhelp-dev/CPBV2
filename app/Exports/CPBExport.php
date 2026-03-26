@@ -44,6 +44,8 @@ class CPBExport implements FromCollection, WithHeadings
         return $query->orderBy('created_at', 'desc')->get()->map(function($cpb) {
             return [
                 'No. Batch' => $cpb->batch_number,
+                'No. Dokumen CPB' => $cpb->cpb_number ?? '-',
+                'Revisi' => $cpb->cpb_revision ?? '0',
                 'Jenis' => $cpb->type == 'pengolahan' ? 'Pengolahan' : 'Pengemasan',
                 'Produk' => $cpb->product_name,
                 'Status' => $this->getStatusText($cpb->status),
@@ -64,6 +66,8 @@ class CPBExport implements FromCollection, WithHeadings
     {
         return [
             'No. Batch',
+            'No. Dokumen CPB',
+            'Revisi',
             'Jenis',
             'Produk',
             'Status',

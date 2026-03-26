@@ -17,19 +17,53 @@
                 
                 <div class="card-body">
                     <div class="form-group">
-                        <label>Nomor Batch</label>
-                        <div class="form-control" style="background-color: #f8f9fa;">
-                            <strong>{{ $cpb->batch_number }}</strong>
-                        </div>
-                        <small class="form-text text-muted">Nomor batch tidak dapat diubah</small>
+                        <label for="batch_number">Nomor Batch *</label>
+                        <input type="text" class="form-control @error('batch_number') is-invalid @enderror" 
+                               id="batch_number" name="batch_number" 
+                               value="{{ old('batch_number', $cpb->batch_number) }}" required>
+                        @error('batch_number')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                     
                     <div class="form-group">
-                        <label>Jenis CPB</label>
-                        <div class="form-control" style="background-color: #f8f9fa;">
-                            <strong>{{ ucfirst($cpb->type) }}</strong>
-                        </div>
-                        <small class="form-text text-muted">Jenis CPB tidak dapat diubah</small>
+                        <label for="type">Jenis CPB *</label>
+                        <select class="form-control @error('type') is-invalid @enderror" 
+                                id="type" name="type" required>
+                            <option value="pengolahan" {{ old('type', $cpb->type) == 'pengolahan' ? 'selected' : '' }}>Pengolahan</option>
+                            <option value="pengemasan" {{ old('type', $cpb->type) == 'pengemasan' ? 'selected' : '' }}>Pengemasan</option>
+                        </select>
+                        @error('type')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cpb_number">No. Dokumen CPB *</label>
+                        <input type="text" class="form-control @error('cpb_number') is-invalid @enderror" 
+                               id="cpb_number" name="cpb_number" 
+                               value="{{ old('cpb_number', $cpb->cpb_number) }}" required>
+                        @error('cpb_number')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cpb_revision">Revisi Ke *</label>
+                        <input type="text" class="form-control @error('cpb_revision') is-invalid @enderror" 
+                               id="cpb_revision" name="cpb_revision" 
+                               value="{{ old('cpb_revision', $cpb->cpb_revision) }}" required>
+                        @error('cpb_revision')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                     
                     <div class="form-group">

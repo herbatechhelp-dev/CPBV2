@@ -23,6 +23,8 @@ class CPB extends Model
 
     protected $fillable = [
         'batch_number',
+        'cpb_number',
+        'cpb_revision',
         'type',
         'product_name',
         'schedule_duration',
@@ -140,6 +142,10 @@ class CPB extends Model
 
     public function getTimeStatusAttribute()
     {
+        if ($this->status === 'released') {
+            return 'released';
+        }
+
         if ($this->is_overdue) {
             return 'overdue';
         }
@@ -158,6 +164,10 @@ class CPB extends Model
 
     public function getTimeStatusBadgeAttribute()
     {
+        if ($this->status === 'released') {
+            return '<span class="badge bg-success" title="Proses Selesai Sepenuhnya"><i class="fas fa-flag-checkered mr-1"></i>Selesai</span>';
+        }
+
         $status = $this->time_status;
         
         $badges = [
@@ -166,7 +176,7 @@ class CPB extends Model
             'overdue' => '<span class="badge bg-danger">⚠️ Overdue</span>'
         ];
         
-        return $badges[$status];
+        return $badges[$status] ?? '';
     }
 
     public function getStatusBadgeAttribute()

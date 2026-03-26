@@ -55,15 +55,15 @@
             <section class="content">
                 <div class="container-fluid">
                     @if(session('success'))
-                    <div class="alert alert-success alert-dismissible">
+                    <div class="alert alert-success alert-dismissible fade show">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         <i class="icon fas fa-check"></i> {{ session('success') }}
                     </div>
                     @endif
 
                     @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close" onclick="$(this).closest('.alert').fadeOut(function(){ $(this).remove(); })" aria-hidden="true">×</button>
                         <i class="icon fas fa-ban"></i> {{ session('error') }}
                     </div>
                     @endif
@@ -94,6 +94,24 @@
 
     <!-- versioning -->
     <script src="{{ asset('js/app.js') }}?v={{ time() }}"></script>
+
+    <script>
+        // Mencegah auto-close dari setTimeout di app.js untuk alert danger/error/warning
+        $(document).ready(function() {
+            var originalAlert = $.fn.alert;
+            $.fn.alert = function(action) {
+                if (action === 'close') {
+                    // Biarkan alert-success ditutup otomatis, abaikan yang lain
+                    var $toClose = this.filter('.alert-success');
+                    if ($toClose.length > 0) {
+                        return originalAlert.call($toClose, action);
+                    }
+                    return this; 
+                }
+                return originalAlert.apply(this, arguments);
+            };
+        });
+    </script>
 
     @stack('scripts')
 </body>

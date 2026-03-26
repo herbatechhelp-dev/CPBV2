@@ -41,7 +41,10 @@
                     <div class="col-md-6 border-right">
                         <dl class="row mb-0">
                             <dt class="col-sm-5 text-muted">No. Batch</dt>
-                            <dd class="col-sm-7 font-weight-bold text-lg">{{ $cpb->batch_number }}</dd>
+                            <dd class="col-sm-7 font-weight-bold text-lg text-primary">{{ $cpb->batch_number }}</dd>
+                            
+                            <dt class="col-sm-5 text-muted">No. Dokumen</dt>
+                            <dd class="col-sm-7 font-weight-bold">{{ $cpb->cpb_number ?? '-' }} <span class="badge badge-secondary ml-1">Rev: {{ $cpb->cpb_revision ?? '0' }}</span></dd>
                             
                             <dt class="col-sm-5 text-muted">Jenis</dt>
                             <dd class="col-sm-7">
@@ -234,7 +237,7 @@
                         $percentage = $cpb->time_limit > 0 ? ($cpb->time_remaining / $cpb->time_limit) * 100 : 0;
                         $percentage = max(0, min(100, $percentage));
                     @endphp
-                    <div class="progress-bar {{ $cpb->time_remaining < 0 ? 'bg-danger' : 'bg-primary' }}" style="width: {{ $percentage }}%"></div>
+                    <div class="progress-bar {{ $cpb->time_remaining < 0 ? 'bg-danger' : 'bg-primary' }}" style="width: {{ $percentage }}%;"></div>
                 </div>
                 
                 <hr>
@@ -252,7 +255,7 @@
                         @endif
                     @endif
 
-                    @if(auth()->user()->role === $cpb->status || auth()->user()->isSuperAdmin())
+                    @if($cpb->status !== 'released' && (auth()->user()->role === $cpb->status || auth()->user()->isSuperAdmin()))
                         @can('handover', $cpb)
                             @if(!($cpb->status === 'qa' && $cpb->is_final_qa))
                                 @if($hasAttachment)
@@ -270,7 +273,7 @@
                         @endcan
                     @endif
 
-                    @if(auth()->user()->role === $cpb->status || auth()->user()->isSuperAdmin())
+                    @if($cpb->status !== 'released' && (auth()->user()->role === $cpb->status || auth()->user()->isSuperAdmin()))
                         @if($cpb->getPreviousDepartment() && Gate::allows('handover', $cpb))
                             <button type="button" class="btn btn-outline-danger btn-block py-2" data-toggle="modal" data-target="#modal-reject">
                                 <i class="fas fa-undo-alt mr-2"></i> KEMBALIKAN (REWORK)

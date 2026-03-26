@@ -45,10 +45,13 @@
                                     </div>
                                 </div> -->
                                 <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>No. Batch</label>
-                                    <input type="text" id="batch_number" name="batch_number" class="form-control" readonly required>
-                                </div>
+                                    <div class="form-group">
+                                        <label>No. Batch <span class="text-danger">*</span></label>
+                                        <input type="text" id="batch_number" name="batch_number" class="form-control @error('batch_number') is-invalid @enderror" value="{{ old('batch_number') }}" placeholder="Masukkan Nomor Batch" required>
+                                        @error('batch_number')
+                                            <span class="text-danger small"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -60,6 +63,28 @@
                                             <option value="pengemasan" {{ old('type') == 'pengemasan' ? 'selected' : '' }}>Pengemasan</option>
                                         </select>
                                         @error('type')
+                                            <span class="text-danger small"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="cpb_number">No. Dokumen CPB <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('cpb_number') is-invalid @enderror" 
+                                               id="cpb_number" name="cpb_number" value="{{ old('cpb_number') }}" 
+                                               placeholder="Contoh: BR-06/PD/001-WO.01" required>
+                                        @error('cpb_number')
+                                            <span class="text-danger small"><strong>{{ $message }}</strong></span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="cpb_revision">Revisi Ke <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('cpb_revision') is-invalid @enderror" 
+                                               id="cpb_revision" name="cpb_revision" value="{{ old('cpb_revision', '0') }}" 
+                                               placeholder="0" required>
+                                        @error('cpb_revision')
                                             <span class="text-danger small"><strong>{{ $message }}</strong></span>
                                         @enderror
                                     </div>
@@ -169,31 +194,7 @@ $(document).ready(function() {
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
 
-    // Auto-generate batch number
-    $('#type').change(function() {
-        const type = $(this).val();
-        if (!type) {
-            $('#batch_number').val('');
-            return;
-        }
-        
-        const year = new Date().getFullYear();
-        const typeCode = type === 'pengolahan' ? 'P' : 'K';
-        
-        // Menggunakan url() agar alamatnya lengkap (http://127.0.0.1:8000/api/...)
-        const targetUrl = "{{ route('cpb.last-number') }}";
-        
-        $.get(targetUrl, { type: type }, function(data) {
-            console.log("Data diterima:", data); 
-            const nextNumber = (parseInt(data.last_number) || 0) + 1;
-            const batchNumber = `CPB-${year}-${typeCode}${nextNumber.toString().padStart(3, '0')}`;
-            $('#batch_number').val(batchNumber);
-        }).fail(function(xhr) {
-            console.error("Error Detail:", xhr.status);
-            // Jika masih 404, kita beri nomor manual sementara
-            $('#batch_number').val(`CPB-${year}-${typeCode}001`);
-        });
-    });
+    // Script auto-generate batch dihapus karena dirubah menjadi manual.
 });
 
 $(document).ready(function() {
